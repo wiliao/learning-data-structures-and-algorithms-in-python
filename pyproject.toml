@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "learning-data-structures-and-algorithms-in-python"
+version = "0.1.0"
+description = "Learning Data Structures and Algorithms in Python"
+readme = "README.md"
+requires-python = ">=3.14"
+
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
