@@ -63,4 +63,66 @@ def increasing_big(n):
         val += increase
     return list
 
-print(increasing_big(10))
+import random
+list = [1, 2, 3, 4, 5, 67]
+
+def shuffle(list):
+    new_list = []
+    for i in range(len(list)):
+        new_list.append("placeholder")
+    for i in range(len(list)):
+        spot = random.randint(0, len(list) - 1)
+        while new_list[spot] != "placeholder":
+            spot = random.randint(0, len(list) - 1)
+        new_list[spot] = list[i]
+    return new_list
+
+def reverser():
+    plist = []
+    try:
+        while True:
+            item = input("Enter an item: ")
+            plist.append(item)
+    except EOFError:
+        for i in range(len(plist)):
+            print(plist[-1 * i - 1])
+
+def oub():
+    spot = int(input("Enter a number: "))
+    list = [0, 0, 0]
+    try:
+        list[spot] = 1
+    except IndexError:
+        print("Out of bounds")
+
+def norm(v, p = 2):
+    thing = sum([abs(n) ** p for n in v]) ** (1 / p)
+    thing = round(thing * 100000) / 100000
+    return thing
+
+def permutator():
+    list = ['c', 'a', 't', 'd', 'o', 'g']
+    perms = []
+    for i in range(999999):
+        perm = str(i)
+        if '1' in perm and '2' in perm and '3' in perm and '4' in perm and '5' in perm and '6' in perm:
+            perms.append(perm)
+    for j in perms:
+        print(list[int(j[0]) - 1] + list[int(j[1]) - 1] + list[int(j[2]) - 1] + list[int(j[3]) - 1] + list[int(j[4]) - 1] + list[int(j[5]) - 1])
+
+def stringToList(string):
+    return [char for char in string]
+
+def make_change(value):
+    coins = [100, 50, 20, 10, 5, 2, 1, 0.25, 0.1, 0.05]
+    needed = []
+    
+    for i in coins:
+        need = 0
+        while value >= i:
+            need += 1
+            value = value - i
+        needed.append(need)
+    return needed
+
+
