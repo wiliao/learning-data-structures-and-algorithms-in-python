@@ -79,7 +79,12 @@ class Vector:
 
     def __init__(self, d):
         """Create d-dimensional vector of zeros."""
-        self._coords = [0] * d
+        if isinstance(d, int) and d > 0:
+            self._coords = [0] * d
+        else:
+            self._coords = []
+            for i in d:
+                self._coords.append(i)
 
     def __len__(self):
         """Return the dimension of the vector."""
@@ -143,10 +148,8 @@ class Vector:
         """Produce string representation of vector."""
         return '<' + str(self._coords)[1:-1] + '>'  # adapt list representation
 
-u = Vector(3)
+u = Vector([1, 2, 3])
 v = Vector(3)
-u[0] = 1
-u[1] = 2
-u[2] = 3
+
 v[0], v[1], v[2] = 4, 5, 6
 print(u * 134)
