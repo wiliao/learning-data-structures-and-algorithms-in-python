@@ -148,8 +148,122 @@ class Vector:
         """Produce string representation of vector."""
         return '<' + str(self._coords)[1:-1] + '>'  # adapt list representation
 
-u = Vector([1, 2, 3])
-v = Vector(3)
+class Progression:
+    """Iterator producing a generic progression.
 
-v[0], v[1], v[2] = 4, 5, 6
-print(u * 134)
+    Default iterator produces the whole numbers 0, 1, 2, ...
+    """
+
+    def __init__(self, start=0):
+        """Initialize current to the first value of the progression."""
+        self._current = start
+
+    def _advance(self):
+        """Update self._current to a new value.
+
+        This should be overridden by a subclass to customize progression.
+
+        By convention, if current is set to None, this designates the
+        end of a finite progression.
+        """
+        self._current += 1
+
+    def __next__(self):
+        """Return the next element, or else raise StopIteration error."""
+        if self._current is None:    # our convention to end a progression
+            raise StopIteration()
+        else:
+            answer = self._current   # record current value to return
+            self._advance()          # advance to prepare for next time
+            return answer            # return the answer
+
+    def __iter__(self):
+        """By convention, an iterator must return itself as an iterator."""
+        return self
+
+    def print_progression(self, n):
+        """Print next n values of the progression."""
+        print(' '.join(str(next(self)) for j in range(n)))
+
+class FibonacciProgression(Progression):
+    """Iterator producing a generalized Fibonacci progression."""
+
+    def __init__(self, first=0, second=1):
+        """Create a new fibonacci progression.
+
+        first   the first term of the progression (default 0)
+        second  the second term of the progression (default 1)
+        """
+        super().__init__(first)            # start progression at first
+        self._prev = second - first        # fictitious value preceding the first
+
+    def _advance(self):
+        """Update current value by taking sum of previous two."""
+        self._prev, self._current = self._current, self._prev + self._current
+
+# prog = FibonacciProgression(2, 2)
+# for i in range(7):
+#     next(prog)
+# print(prog._current)
+
+from abc import ABCMeta, abstractmethod
+
+class Sequence(metaclass=ABCMeta):
+    """Our own version of collections.Sequence abstract base class."""
+
+    @abstractmethod
+    def __len__(self):
+        """Return the length of the sequence."""
+        pass
+
+    @abstractmethod
+    def __getitem__(self, j):
+        """Return the element at index j of the sequence."""
+        pass
+
+    def __contains__(self, val):
+        """Return True if val found in the sequence; False otherwise."""
+        for j in range(len(self)):
+            if self[j] == val:  # found match
+                return True
+        return False
+
+    def index(self, val):
+        """Return leftmost index at which val is found (or raise ValueError)."""
+        for j in range(len(self)):
+            if self[j] == val:  # leftmost match
+                return j
+        raise ValueError("value not in sequence")  # never found a match
+
+    def count(self, val):
+        """Return the number of elements equal to given value."""
+        k = 0
+        for j in range(len(self)):
+            if self[j] == val:  # found a match
+                k += 1
+        return k
+
+    def __eq__(self, other):
+        try:
+            if len(self) != len(other):
+                return False
+            for j in range(len(self)):
+                if self[j] != other[j]:
+                    return False
+            return True
+        except:
+            return False
+    
+    def __lt__(self, other):
+        for j in range(len(self)):
+            try:
+                if self[j] < other[j]:
+                    return True
+                elif self[j] > other[j]:
+                    return False
+            except IndexError:
+                return False
+        if len(self) < len(other):
+            return True
+        return False
+
