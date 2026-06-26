@@ -125,9 +125,16 @@ class Vector:
         return result
 
     def __mul__(self, other):
-        result = Vector(len(self))   # start with vector of zeros
-        for j in range(len(self)):
-            result[j] = self[j] * other
+        if isinstance(other, (int, float)):
+            result = Vector(len(self))
+            for j in range(len(self)):
+                result[j] = self[j] * other
+        elif isinstance(other, Vector):
+            if len(self) != len(other):  # relies on __len__ method
+                raise ValueError('dimensions must agree')
+            result = 0
+            for j in range(len(self)):
+                result += self[j] * other[j]
         return result
 
     def __neg__(self):
@@ -147,6 +154,13 @@ class Vector:
     def __str__(self):
         """Produce string representation of vector."""
         return '<' + str(self._coords)[1:-1] + '>'  # adapt list representation
+
+# u = Vector(3)
+# v = Vector(3)
+# u[0], u[1], u[2] = 1, 2, 3
+# v[0], v[1], v[2] = 4, 5, 7
+# print(u * 3)
+# print(u * v)
 
 class Progression:
     """Iterator producing a generic progression.
@@ -267,3 +281,104 @@ class Sequence(metaclass=ABCMeta):
             return True
         return False
 
+class Range:
+    """A class that mimics the built-in range class."""
+
+    def __init__(self, start, stop=None, step=1):
+        """Initialize a Range instance.
+
+        Semantics is similar to built-in range class.
+        """
+        if step == 0:
+            raise ValueError("step cannot be 0")
+
+        if stop is None:  # special case of range(n)
+            start, stop = 0, start  # should be treated as if range(0, n)
+
+        # calculate the effective length once
+        self._length = max(0, (stop - start + step - 1) // step)
+
+        # need knowledge of start and step (but not stop) to support __getitem__
+        self._start = start
+        self._step = step
+        self._stop = stop
+
+    def __len__(self):
+        """Return number of entries in the range."""
+        return self._length
+
+    def __getitem__(self, k):
+        """Return entry at index k (using standard interpretation if negative)."""
+        if k < 0:
+            k += len(self)  # attempt to convert negative index
+
+        if not 0 <= k < self._length:
+            raise IndexError("index out of range")
+
+        return self._start + k * self._step
+    
+    def __contains__(self, item):
+        if item >= self._start and item < self._stop and item % self._step == self._start % self._step:
+            return True
+        return False
+
+class PredatoryCreditCard(CreditCard):
+    """An extension to CreditCard that compounds interest and fees."""
+
+    def __init__(self, customer, bank, acnt, limit, apr):
+        """Create a new predatory credit card instance.
+
+        The initial balance is zero.
+
+        customer  the name of the customer (e.g., 'John Bowman')
+        bank      the name of the bank (e.g., 'California Savings')
+        acnt      the account identifier (e.g., '5391 0375 9387 5309')
+        limit     credit limit (measured in dollars)
+        apr       annual percentage rate (e.g., 0.0825 for 8.25% APR)
+        """
+        super().__init__(customer, bank, acnt, limit)  # call super constructor
+        self._apr = apr
+        self._calls = 0
+
+    def charge(self, price):
+        """Charge given price to the card, assuming sufficient credit limit.
+
+        Return True if charge was processed.
+        Return False and assess $5 fee if charge is denied.
+        """
+        self._calls += 1
+        if self._calls >= 10:
+            self._balance += 1
+        success = super().charge(price)  # call inherited method
+        if not success:
+            self._balance += 5  # assess penalty
+        return success  # caller expects return value
+
+    def process_month(self):
+        """Assess monthly interest on outstanding balance."""
+        self._calls = 0
+        if self._balance > 0:
+            # if positive balance, convert APR to monthly multiplicative factor
+            monthly_factor = pow(1 + self._apr, 1 / 12)
+            self._balance *= monthly_factor
+
+class rFibProgression(Progression):
+    def __init__(self, first, second):
+        super().__init__(first)
+        self._prev = first + second
+    
+    def _advance(self):
+        self._prev, self._current = self._current, abs(self._prev - self._current)
+    
+# fib = rFibProgression(423, 69)
+
+# fib.print_progression(67)
+class sqrtProgression(Progression):
+    def __init__(self, first = 65536):
+        super().__init__(first)
+    
+    def _advance(self):
+        self._current **= 1/2
+
+prog = sqrtProgression()
+prog.print_progression(10)
