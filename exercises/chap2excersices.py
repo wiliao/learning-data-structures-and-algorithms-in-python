@@ -380,5 +380,88 @@ class sqrtProgression(Progression):
     def _advance(self):
         self._current **= 1/2
 
-prog = sqrtProgression()
-prog.print_progression(10)
+def derivative():
+    ans = ''
+    poly = {}
+    while ans != "stop":
+        try:
+            coef = int(input('coefficient: '))
+            power = int(input('exponent: ' ))
+            poly[coef] = power
+        except:
+            ans = "stop"
+    deriv = []
+    for x in poly:
+        if poly[x] > 2:
+            deriv.append(f'{x * poly[x]}x^{poly[x] - 1}')
+        elif poly[x] == 2:
+            deriv.append(f'{x * poly[x]}x')
+        elif poly[x] == 1:
+            deriv.append(x)
+    answer = ''
+    for i in deriv:
+        if i == deriv[0]:
+            answer = i
+        else:
+            answer = f'{answer} + {str(i)}'
+    return answer
+
+def alphaChecker():
+    doc = input().lower()
+    a= b= c= d= e= f= g= h= i= j= k= l= m= n= o= p= q= r= s= t= u= v= w= x= y= z = 0
+    for letter in doc:
+        if letter == 'a':
+            a += 1
+        if letter == 'b':
+            b += 1
+        if letter == 'c':
+            c += 1
+        if letter == 'd':
+            d += 1
+        if letter == 'e':
+            e += 1
+        if letter == 'f':
+            f += 1
+        if letter == 'g':
+            g += 1
+        if letter == 'h':
+            h += 1
+        if letter == 'i':
+            i += 1
+        if letter == 'j':
+            j += 1
+        if letter == 'k':
+            k += 1
+        if letter == 'l':
+            l += 1
+        if letter == 'm':
+            m += 1
+        if letter == 'n':
+            n += 1
+        if letter == 'o':
+            o += 1
+        if letter == 'p':
+            p += 1
+        if letter == 'q':
+            q += 1
+        if letter == 'r':
+            r += 1
+        if letter == 's':
+            s += 1
+        if letter == 't':
+            t += 1
+        if letter == 'u':
+            u += 1
+        if letter == 'v':
+            v += 1
+        if letter == 'w':
+            w += 1
+        if letter == 'x':
+            x += 1
+        if letter == 'y':
+            y += 1
+        if letter == 'z':
+            z += 1
+    print(f"a: {a}, b: {b}, c: {c}, d: {d}, e: {e}, f: {f}, g: {g}, h: {h}, i: {i},")
+    print(f"j: {j}, k: {k}, l: {l}, m: {m}, n: {n}, o: {o}, p: {p}, q: {q}, r: {r},")
+    print(f"s: {s}, t: {t}, u: {u}, v: {v}, w: {w}, x: {x}, y: {y}, z: {z}")
