@@ -465,3 +465,32 @@ def alphaChecker():
     print(f"a: {a}, b: {b}, c: {c}, d: {d}, e: {e}, f: {f}, g: {g}, h: {h}, i: {i},")
     print(f"j: {j}, k: {k}, l: {l}, m: {m}, n: {n}, o: {o}, p: {p}, q: {q}, r: {r},")
     print(f"s: {s}, t: {t}, u: {u}, v: {v}, w: {w}, x: {x}, y: {y}, z: {z}")
+
+from math import *
+
+class RegularPolygon:
+    def __init__(self, side_length = 1, sides = 3):
+        self._length = side_length
+        self._sides = sides
+
+    def print_perimeter(self):
+        print(self._length * self._sides)
+    
+    def print_area(self):
+        area = self._length ** 2 * self._sides / 4 / tan(pi / self._sides)
+        print(area)
+
+class IsoscelesTriangle(RegularPolygon):
+    def __init__(self, length1 = 1, length2 = 2):
+        super().__init__(length1, 3)
+        self._length1 = length1
+        self._length2 = length2
+    
+    def print_perimeter(self):
+        print(self._length1 + self._length2 * 2)
+    
+    def print_area(self):
+        height = sqrt(self._length2 ** 2 - (self._length1 / 2) ** 2)
+        area = self._length1 * height / 2
+        print(area)
+
